@@ -317,17 +317,32 @@ function App() {
     setChats(chats => [...chats, { msg: msg, who: 'me' }])
 
     var myHeaders = new Headers();
-    myHeaders.append("Accept", "*/*");
-    myHeaders.append("Accept-Language", "en-US,en");
-    myHeaders.append("Connection", "keep-alive");
-    myHeaders.append("Content-Type", "text/plain;charset=UTF-8");
-    myHeaders.append("Origin", "http://47.253.44.115:3001");
-    myHeaders.append("Referer", "http://47.253.44.115:3001/");
-    myHeaders.append("Sec-GPC", "1");
+    myHeaders.append("Content-Type", "application/json");
 
     setMsg("");
     setLoad(true);
-    var raw = "{\"messages\":[{\"role\":\"user\",\"content\":\"hi\"},{\"role\":\"assistant\",\"content\":\"Hi there! How can I assist you today?\"},{\"role\":\"user\",\"content\":\"generate all responses shorter than 60 words\"},{\"role\":\"assistant\",\"content\":\"Sure, I can provide responses that are shorter than 100 words. Feel free to ask any questions or provide prompts!\"},{\"role\":\"user\",\"content\":\"" + msg + "\"}],\"time\":1690201202582,\"sign\":\"c98406353fc242334ed935fb1c24b6ea607f8303ff02ea94afc33e9a1999136\"}";
+    var raw = JSON.stringify({
+      "model": "gpt-3.5-turbo",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello"
+        },
+        {
+          "role": "assistant",
+          "content": "Hi there! How can I assist you today?"
+        },
+        {
+          "role": "user",
+          "content": "generate all responses shorter than 100 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Sure, I can provide responses that are shorter than 100 words. Feel free to ask any questions or provide prompts!"
+        }
+      ],
+      "stream": false
+    });
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -335,17 +350,18 @@ function App() {
       redirect: 'follow'
     };
     const start = new Date();
-    fetch("http://47.253.44.115:3001/api/generate", requestOptions)
-      .then(response => response.text())
+    fetch("https://fakell.raidghost.com/v1/chat/completions/", requestOptions)
+      .then(res => res.text())
+      .then(response => JSON.parse(response))
       .then(result => {
         console.log(result);
         const timeTaken = (new Date()) - start;
         setSpeak(true);
-        setText("" + result);
+        setText("" + result.choices[0].message.content);
         setexct(timeTaken/1000);
         setLoad(false)
       })
-      .catch((error) => { alert('error: ', error); setLoad(false) });
+      .catch((error) => { alert('error: ', error.message); setLoad(false) });
   }
   useEffect(() => {
     document.querySelector('.chat-box').scrollTop = document.querySelector('.chat-box').scrollHeight;
@@ -407,7 +423,7 @@ function App() {
         theme="dark"
       />
       <div style={STYLES.area}>
-        <button onClick={() => setSpeak(true)} style={STYLES.speak}> {speak ? 'Running...' : 'Speak'}</button>
+        <button style={STYLES.speak}> {speak ? 'Running...' : 'Speak'}</button>
       </div>
       <div className='chat-div'>
         <div className='chat-box'>
