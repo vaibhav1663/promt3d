@@ -6,7 +6,10 @@
     outline: none;
     font-family: -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
 }
-
+body{
+    height: 100vh;
+    height: (var(--vh, 1vh) * 100);
+}
 .chat-div {
     position: absolute;
     right: 0;
