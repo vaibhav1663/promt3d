@@ -339,6 +339,9 @@ function App() {
         {
           "role": "assistant",
           "content": "Sure, I can provide responses that are shorter than 100 words. Feel free to ask any questions or provide prompts!"
+        },{
+          "role": 'user',
+          "content": ""+msg
         }
       ],
       "stream": false
