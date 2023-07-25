@@ -300,7 +300,7 @@ const STYLES = {
 
 function App() {
 
-  const [chats, setChats] = useState([{ msg: 'Hello', who: 'bot', exct: '0' }, { msg: 'Hey', who: 'me' }])
+  const [chats, setChats] = useState([{ msg: 'Hi there! How can I assist you today?', who: 'bot', exct: '0' }])
   const [text, setText] = useState("Hello I am joi, your 3D virtual assistant.");
   const [msg, setMsg] = useState("");
   const [exct, setexct] = useState("");
@@ -339,9 +339,9 @@ function App() {
         {
           "role": "assistant",
           "content": "Sure, I can provide responses that are shorter than 100 words. Feel free to ask any questions or provide prompts!"
-        },{
+        }, {
           "role": 'user',
-          "content": ""+msg
+          "content": "" + msg
         }
       ],
       "stream": false
@@ -361,7 +361,7 @@ function App() {
         const timeTaken = (new Date()) - start;
         setSpeak(true);
         setText("" + result.choices[0].message.content);
-        setexct(timeTaken/1000);
+        setexct(timeTaken / 1000);
         setLoad(false)
       })
       .catch((error) => { alert('error: ', error.message); setLoad(false) });
@@ -442,12 +442,15 @@ function App() {
               </p>
             }
           })}
+
+          {load==true || speak && !playing ? <p style={{ padding: '5px', display: 'flex', alignItems: 'center' }}><lottie-player src="https://lottie.host/8891318b-7fd9-471d-a9f4-e1358fd65cd6/EQt3MHyLWk.json" style={{width: "50px", height: "50px"}} loop autoplay speed="1.4" direction="1" mode="normal"></lottie-player></p>: <></>}
+          
         </div>
         <div className='msg-box'>
           <button className='msgbtn' id='mic' onTouchStart={startListening} onMouseDown={startListening} onTouchEnd={stopListening} onMouseUp={stopListening}>
             <img src='./images/icons/mic.png' alt='mic' unselectable='on'></img>
           </button>
-          <input type='text' value={msg} onChange={e => setMsg(e.target.value)} onKeyDown={(e) => e.key === 'Enter' ? getResposnse(msg) : console.log("empty text")} placeholder='Say Hello!'></input>
+          <input type='text' value={msg} onChange={e => setMsg(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { getResposnse(msg) } }} placeholder='Say Hello!'></input>
           <button className='msgbtn' id='send' onClick={() => { getResposnse(msg) }}>
             <img src='./images/icons/send.png' alt='mic'></img>
           </button>
