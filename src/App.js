@@ -443,8 +443,7 @@ function App() {
             }
           })}
 
-          {load==true || speak && !playing ? <p style={{ padding: '5px', display: 'flex', alignItems: 'center' }}><lottie-player src="https://lottie.host/8891318b-7fd9-471d-a9f4-e1358fd65cd6/EQt3MHyLWk.json" style={{width: "50px", height: "50px"}} loop autoplay speed="1.4" direction="1" mode="normal"></lottie-player></p>: <></>}
-          
+          {load==true || speak && !playing ? <p style={{ padding: '5px', display: 'flex', alignItems: 'center' }}><lottie-player src="https://lottie.host/8891318b-7fd9-471d-a9f4-e1358fd65cd6/EQt3MHyLWk.json" style={{width: "50px", height: "50px"}} loop autoplay speed="1.4" direction="1" mode="normal"></lottie-player></p>: <></>}  
         </div>
         <div className='msg-box'>
           <button className='msgbtn' id='mic' onTouchStart={startListening} onMouseDown={startListening} onTouchEnd={stopListening} onMouseUp={stopListening}>
