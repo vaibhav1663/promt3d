@@ -442,7 +442,7 @@ function App() {
         </div>
         <div className='msg-box'>
           <button className='msgbtn' id='mic' onTouchStart={startListening} onMouseDown={startListening} onTouchEnd={stopListening} onMouseUp={stopListening}>
-            <img src='./images/icons/mic.png' alt='mic'></img>
+            <img src='./images/icons/mic.png' alt='mic' unselectable='on'></img>
           </button>
           <input type='text' value={msg} onChange={e => setMsg(e.target.value)} onKeyDown={(e) => e.key === 'Enter' ? getResposnse(msg) : console.log("empty text")} placeholder='Say Hello!'></input>
           <button className='msgbtn' id='send' onClick={() => { getResposnse(msg) }}>
