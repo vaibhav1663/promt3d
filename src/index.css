@@ -16,4 +16,5 @@ code {
 canvas{
   height: 100vh;
   width: 100vh;
+  height: (var(--vh, 1vh) * 100);
 }
