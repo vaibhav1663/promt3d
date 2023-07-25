@@ -8,7 +8,6 @@
 }
 body{
     height: 100vh;
-    height: (var(--vh, 1vh) * 100);
 }
 .chat-div {
     position: absolute;
