@@ -7,6 +7,7 @@ import { LinearEncoding, sRGBEncoding } from 'three/src/constants';
 import { LineBasicMaterial, MeshPhysicalMaterial, Vector2 } from 'three';
 import ReactAudioPlayer from 'react-audio-player';
 
+import { OrbitControls } from '@react-three/drei';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -291,11 +292,9 @@ function makeSpeech(text) {
 }
 
 const STYLES = {
-  area: { position: 'absolute', bottom: '10px', left: '10px', zIndex: 500 },
-  text: { margin: '0px', width: '300px', padding: '5px', background: 'none', color: '#ffffff', fontSize: '1.2em', border: 'none' },
-  speak: { padding: '10px', marginTop: '5px', display: 'block', color: '#FFFFFF', background: '#222222', border: 'None' },
-  area2: { position: 'absolute', top: '5px', right: '15px', zIndex: 500 },
-  label: { color: '#777777', fontSize: '0.8em' },
+  area: { position: 'absolute', bottom: '0', left: '0', zIndex: 500 },
+  speak: { padding: '5px', display: 'block', color: '#FFFFFF', background: '#222222', border: 'None' },
+  label: { color: '#777777', fontSize: '0.5em' },
 }
 
 function App() {
@@ -364,7 +363,7 @@ function App() {
         setexct(timeTaken / 1000);
         setLoad(false)
       })
-      .catch((error) => { alert('error: ', error.message); setLoad(false) });
+      .catch((error) => { alert('error: ', error.message); setLoad(false); setText("Sorry, API isn't working currently. try after some time.")});
   }
   useEffect(() => {
     document.querySelector('.chat-box').scrollTop = document.querySelector('.chat-box').scrollHeight;
@@ -386,7 +385,7 @@ function App() {
   function playerReady(e) {
     audioPlayer.current.audioEl.current.play();
     setPlaying(true);
-    setChats(chats => [...chats, { msg: text, who: 'bot', exct: exct }]);
+    setChats(chats => [...chats, {  msg: text, who: 'bot', exct: exct }]);
 
   }
   const {
@@ -426,7 +425,9 @@ function App() {
         theme="dark"
       />
       <div style={STYLES.area}>
-        <button style={STYLES.speak}> {speak ? 'Running...' : 'Speak'}</button>
+        <button style={STYLES.speak}>
+          {speak||load ? 'Running...' : 'Type message.'}
+        </button>
       </div>
       <div className='chat-div'>
         <div className='chat-box'>
@@ -443,7 +444,7 @@ function App() {
             }
           })}
 
-          {load==true || speak && !playing ? <p style={{ padding: '5px', display: 'flex', alignItems: 'center' }}><lottie-player src="https://lottie.host/8891318b-7fd9-471d-a9f4-e1358fd65cd6/EQt3MHyLWk.json" style={{width: "50px", height: "50px"}} loop autoplay speed="1.4" direction="1" mode="normal"></lottie-player></p>: <></>}  
+          {(load==true || speak) && !playing ? <p style={{ padding: '5px', display: 'flex', alignItems: 'center' }}><lottie-player src="https://lottie.host/8891318b-7fd9-471d-a9f4-e1358fd65cd6/EQt3MHyLWk.json" style={{width: "50px", height: "50px"}} loop autoplay speed="1.4" direction="1" mode="normal"></lottie-player></p>: <></>}  
         </div>
         <div className='msg-box'>
           <button className='msgbtn' id='mic' onTouchStart={startListening} onMouseDown={startListening} onTouchEnd={stopListening} onMouseUp={stopListening}>
@@ -470,7 +471,7 @@ function App() {
 
         <OrthographicCamera
           makeDefault
-          zoom={2000}
+          zoom={1400}
           position={[0, 1.65, 1]}
         />
 
@@ -504,10 +505,10 @@ function App() {
 
 function Bg() {
 
-  const texture = useTexture('/images/bg.webp');
+  const texture = useTexture('/images/background.jpg');
 
   return (
-    <mesh position={[0, 1.5, -2]} scale={[0.8, 0.8, 0.8]}>
+    <mesh position={[0, 1.5, -4]} scale={[1.2,1.2,1.2]}>
       <planeBufferGeometry />
       <meshBasicMaterial map={texture} />
 
