@@ -192,6 +192,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing }) 
   });
 
   const [clips, setClips] = useState([]);
+  
   const mixer = useMemo(() => new THREE.AnimationMixer(gltf.scene), []);
 
   useEffect(() => {
@@ -304,6 +305,7 @@ function App() {
   const [msg, setMsg] = useState("");
   const [exct, setexct] = useState("");
   const [load, setLoad] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const getResposnse = (msg) => {
     if (msg === '') {
       toast.error("Promt can't be empty.[In some browsers mic may not work]");
@@ -315,55 +317,32 @@ function App() {
     }
     setChats(chats => [...chats, { msg: msg, who: 'me' }])
 
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
     setMsg("");
     setLoad(true);
-    var raw = JSON.stringify({
-      "model": "gpt-3.5-turbo",
-      "messages": [
-        {
-          "role": "user",
-          "content": "Hello"
-        },
-        {
-          "role": "assistant",
-          "content": "Hi there! How can I assist you today?"
-        },
-        {
-          "role": "user",
-          "content": "generate all responses shorter than 100 words"
-        },
-        {
-          "role": "assistant",
-          "content": "Sure, I can provide responses that are shorter than 100 words. Feel free to ask any questions or provide prompts!"
-        }, {
-          "role": 'user',
-          "content": "" + msg
-        }
-      ],
-      "stream": false
-    });
     var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow'
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en',
+        'Content-Type': 'application/json',
+      },
     };
+    
+    
     const start = new Date();
-    fetch("https://fakell.raidghost.com/v1/chat/completions/", requestOptions)
-      .then(res => res.text())
-      .then(response => JSON.parse(response))
+    fetch("https://chadgpt-r3sp.onrender.com/"+ msg, requestOptions)
+      .then(response => response.text())
       .then(result => {
-        console.log(result);
+        console.log(result)
         const timeTaken = (new Date()) - start;
         setSpeak(true);
-        setText("" + result.choices[0].message.content);
+        setText("" + result.substring(1,result.length-1) );
         setexct(timeTaken / 1000);
         setLoad(false)
       })
       .catch((error) => { alert('error: ', error.message); setLoad(false); setText("Sorry, API isn't working currently. try after some time.")});
+    
   }
   useEffect(() => {
     document.querySelector('.chat-box').scrollTop = document.querySelector('.chat-box').scrollHeight;
@@ -428,6 +407,16 @@ function App() {
         <button style={STYLES.speak}>
           {speak||load ? 'Running...' : 'Type message.'}
         </button>
+      </div>
+      <div className='about' onClick={()=>{setShowModal(!showModal)}}>
+        <img src='./images/icons/menu.png' alt='menu'></img>
+      </div>
+      <div className='modal' style={{display : showModal ? 'flex':'none'}}>
+        <h1>Promt 3D</h1>
+        <p>A ThreeJS-powered virtual human that uses chatGPT and Azure APIs to do some face talking</p>
+        <a className='repo' href='https://github.com/vaibhav1663/promt3d' target='_blank'>Github</a>
+        <p>Designed and developed by</p>
+        <a href='https://vaibhavkhating.netlify.app/' target='_blank'>Vaibhav Khating</a>
       </div>
       <div className='chat-div'>
         <div className='chat-box'>
