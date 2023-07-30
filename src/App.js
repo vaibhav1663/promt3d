@@ -332,7 +332,7 @@ function App() {
 
 
     const start = new Date();
-    fetch("https://chatgpt.vaibhavkhating.repl.co/" + msg, requestOptions)
+    fetch("https://chadgpt-r3sp.onrender.com/" + msg, requestOptions)
       .then(response => response.text())
       .then(result => {
         console.log(result)
