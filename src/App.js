@@ -192,7 +192,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing }) 
   });
 
   const [clips, setClips] = useState([]);
-  
+
   const mixer = useMemo(() => new THREE.AnimationMixer(gltf.scene), []);
 
   useEffect(() => {
@@ -306,6 +306,7 @@ function App() {
   const [exct, setexct] = useState("");
   const [load, setLoad] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [visits, setVisits] = useState("--");
   const getResposnse = (msg) => {
     if (msg === '') {
       toast.error("Promt can't be empty.[In some browsers mic may not work]");
@@ -328,22 +329,45 @@ function App() {
         'Content-Type': 'application/json',
       },
     };
-    
-    
+
+
     const start = new Date();
-    fetch("https://chadgpt-r3sp.onrender.com/"+ msg, requestOptions)
+    fetch("https://chatgpt.vaibhavkhating.repl.co/" + msg, requestOptions)
       .then(response => response.text())
       .then(result => {
         console.log(result)
         const timeTaken = (new Date()) - start;
         setSpeak(true);
-        setText("" + result.substring(1,result.length-1) );
+        setText("" + result.substring(1, result.length - 1));
         setexct(timeTaken / 1000);
         setLoad(false)
       })
-      .catch((error) => { alert('error: ', error.message); setLoad(false); setText("Sorry, API isn't working currently. try after some time.")});
-    
+      .catch((error) => { alert('error: ', error.message); setLoad(false); setText("Sorry, API isn't working currently. try after some time.") });
+
   }
+
+  const getWebsiteVisits = async () => {
+    const url = 'https://counter10.p.rapidapi.com/?ID=prompt3&COLOR=red&CLABEL=blue';
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': 'ede3c5163fmsh01abdacf07fd2b0p1c0e4bjsn1db1b15be576',
+        'X-RapidAPI-Host': 'counter10.p.rapidapi.com'
+      }
+    };
+    try {
+      const response = await fetch(url, options);
+      const result = await response.text();
+      console.log(result);
+
+      setVisits(JSON.parse(result).message)
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  useEffect(() => {
+    getWebsiteVisits();
+  }, [])
   useEffect(() => {
     document.querySelector('.chat-box').scrollTop = document.querySelector('.chat-box').scrollHeight;
   }, [chats])
@@ -364,7 +388,7 @@ function App() {
   function playerReady(e) {
     audioPlayer.current.audioEl.current.play();
     setPlaying(true);
-    setChats(chats => [...chats, {  msg: text, who: 'bot', exct: exct }]);
+    setChats(chats => [...chats, { msg: text, who: 'bot', exct: exct }]);
 
   }
   const {
@@ -405,18 +429,19 @@ function App() {
       />
       <div style={STYLES.area}>
         <button style={STYLES.speak}>
-          {speak||load ? 'Running...' : 'Type message.'}
+          {speak || load ? 'Running...' : 'Type message.'}
         </button>
       </div>
-      <div className='about' onClick={()=>{setShowModal(!showModal)}}>
+      <div className='about' onClick={() => { setShowModal(!showModal) }}>
         <img src='./images/icons/menu.png' alt='menu'></img>
       </div>
-      <div className='modal' style={{display : showModal ? 'flex':'none'}}>
+      <div className='modal' style={{ display: showModal ? 'flex' : 'none' }}>
         <h1>Promt 3D</h1>
-        <p>A ThreeJS-powered virtual human that uses chatGPT and Azure APIs to do some face talking</p>
-        <a className='repo' href='https://github.com/vaibhav1663/promt3d' target='_blank'>Github</a>
+        <p style={{ marginTop: '10px' }}>A ThreeJS-powered virtual human that uses chatGPT and Azure APIs to do some face talking</p>
+        <a style={{ padding: '10px' }} className='repo' href='https://github.com/vaibhav1663/promt3d' target='_blank'>Github</a>
         <p>Designed and developed by</p>
-        <a href='https://vaibhavkhating.netlify.app/' target='_blank'>Vaibhav Khating</a>
+        <a href='https://vaibhavkhating.netlify.app/' target='_blank' style={{ marginBlock: "5px" }}>Vaibhav Khating</a>
+        <p>Visitor's count 👀 : <span style={{color: '#35a4f3'}}>{visits}</span></p>
       </div>
       <div className='chat-div'>
         <div className='chat-box'>
@@ -433,7 +458,7 @@ function App() {
             }
           })}
 
-          {(load==true || speak) && !playing ? <p style={{ padding: '5px', display: 'flex', alignItems: 'center' }}><lottie-player src="https://lottie.host/8891318b-7fd9-471d-a9f4-e1358fd65cd6/EQt3MHyLWk.json" style={{width: "50px", height: "50px"}} loop autoplay speed="1.4" direction="1" mode="normal"></lottie-player></p>: <></>}  
+          {(load == true || speak) && !playing ? <p style={{ padding: '5px', display: 'flex', alignItems: 'center' }}><lottie-player src="https://lottie.host/8891318b-7fd9-471d-a9f4-e1358fd65cd6/EQt3MHyLWk.json" style={{ width: "50px", height: "50px" }} loop autoplay speed="1.4" direction="1" mode="normal"></lottie-player></p> : <></>}
         </div>
         <div className='msg-box'>
           <button className='msgbtn' id='mic' onTouchStart={startListening} onMouseDown={startListening} onTouchEnd={stopListening} onMouseUp={stopListening}>
@@ -497,7 +522,7 @@ function Bg() {
   const texture = useTexture('/images/background.jpg');
 
   return (
-    <mesh position={[0, 1.5, -4]} scale={[1.2,1.2,1.2]}>
+    <mesh position={[0, 1.5, -4]} scale={[1.2, 1.2, 1.2]}>
       <planeBufferGeometry />
       <meshBasicMaterial map={texture} />
 
