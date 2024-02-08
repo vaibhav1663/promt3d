@@ -15,7 +15,9 @@ import createAnimation from './converter';
 import blinkData from './blendDataBlink.json';
 
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// Access your API key (see "Set up your API key" above)
 import './App.css'
 
 import * as THREE from 'three';
@@ -24,6 +26,7 @@ const _ = require('lodash');
 
 const host = 'https://talking-avatar.onrender.com'
 
+const genAI = new GoogleGenerativeAI(process.env.REACT_APP_BARD_API_KEY);
 function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing }) {
 
   let gltf = useGLTF(avatar_url);
@@ -307,7 +310,7 @@ function App() {
   const [load, setLoad] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [visits, setVisits] = useState("--");
-  const getResposnse = (msg) => {
+  const getResposnse = async (msg) => {
     if (msg === '') {
       toast.error("Promt can't be empty.[In some browsers mic may not work]");
       return;
@@ -329,21 +332,21 @@ function App() {
         'Content-Type': 'application/json',
       },
     };
-
-
+  
     const start = new Date();
-    fetch("https://chadgpt-r3sp.onrender.com/" + msg, requestOptions)
-      .then(response => response.text())
-      .then(result => {
-        console.log(result)
-        const timeTaken = (new Date()) - start;
-        setSpeak(true);
-        setText("" + result.substring(1, result.length - 1));
-        setexct(timeTaken / 1000);
-        setLoad(false)
-      })
-      .catch((error) => { alert('error: ', error.message); setLoad(false); setText("Sorry, API isn't working currently. try after some time.") });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
+    const prompt = msg
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const timeTaken = (new Date()) - start;
+    const text = response.text();
+    setSpeak(true);
+    setText(text);
+    setexct(timeTaken / 1000);
+    setLoad(false)
+    
   }
 
   const getWebsiteVisits = async () => {
