@@ -336,7 +336,7 @@ function App() {
     const start = new Date();
     const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
-    const prompt = "Generate concise resposne if possible within 100 words for this prompt : " + msg 
+    const prompt = "Generate short response for this prompt : " + msg 
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
