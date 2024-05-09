@@ -442,7 +442,7 @@ function App() {
         <h1>Promt 3D</h1>
         <p style={{ marginTop: '10px' }}>A ThreeJS-powered virtual human that uses chatGPT and Azure APIs to do some face talking</p>
         <a style={{ padding: '10px' }} className='repo' href='https://github.com/vaibhav1663/promt3d' target='_blank'>Github</a>
-        <p>Designed and developed by</p>
+        <p>Made with ❤️ by</p>
         <a href='https://vaibhavkhating.netlify.app/' target='_blank' style={{ marginBlock: "5px" }}>Vaibhav Khating</a>
         <p>Visitor's count 👀 : <span style={{color: '#35a4f3'}}>{visits}</span></p>
       </div>
