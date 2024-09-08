@@ -6,8 +6,12 @@ A ThreeJS-powered virtual human being that uses a set of neat [Azure APIs](https
 
 ## Run
 ```
-$ yarn install
-$ yarn start
+npm install 
+npm start
+
+
+yarn
+yarn start
 ```
 
 ## Backend
